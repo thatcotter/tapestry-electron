@@ -38,20 +38,20 @@ document.body.onload = () => {
   list1.className = "horizontal"
   app.appendChild(list1)
 
-  let header3 = document.createElement('h1')
-  header3.textContent = "Tapestry State"
-  app.appendChild(header3)
+  // let header3 = document.createElement('h1')
+  // header3.textContent = "Tapestry State"
+  // app.appendChild(header3)
 
-  let list2 = document.createElement('ol')
-  list2.id = "states"
-  list2.className = "horizontal"
-  app.appendChild(list2)
+  // let list2 = document.createElement('ol')
+  // list2.id = "states"
+  // list2.className = "horizontal"
+  // app.appendChild(list2)
 
-  for (let i = 0; i < 64; i++) {
-    const element = document.createElement('li');
-    element.textContent = tapestry[i]
-    list2.appendChild(element)
-  }
+  // for (let i = 0; i < 64; i++) {
+  //   const element = document.createElement('li');
+  //   element.textContent = tapestry[i]
+  //   list2.appendChild(element)
+  // }
 }
 
 const step = () => {
@@ -75,15 +75,15 @@ const step = () => {
   });
 
 
-  let states
-  if (document.getElementById('states').childNodes) {
-    states = document.getElementById('states').childNodes
-  }
+  // let states
+  // if (document.getElementById('states').childNodes) {
+  //   states = document.getElementById('states').childNodes
+  // }
 
-  states.forEach((state, i) => {
-    states[i].textContent = tapestry[i]
-    states[i].style.color = (tapestry[i]) ? "green" : "black"
-  });
+  // states.forEach((state, i) => {
+  //   states[i].textContent = tapestry[i]
+  //   states[i].style.color = (tapestry[i]) ? "green" : "black"
+  // });
 }
 // window.requestAnimationFrame(step)
 
@@ -107,11 +107,11 @@ notes.forEach(note => {
   tapestry.push(false)
 })
 
-const recordTouch = (note, press) => {
+const recordTouch = (channel, note, press) => {
   if (press) {
-    lastTouched.push(note)
+    lastTouched.push([channel, note])
     tapestry[note - 1] = true
-    gameLogic(note)
+    gameLogic(channel, note)
   } else {
     tapestry[note - 1] = false
   }
@@ -130,31 +130,51 @@ const gameStates = {
 
 let currentGameState = gameStates.initial;
 let melody = [
-  5, 6, 7, 8,
-  5, 6, 7, 8,
-  5, 6, 7, 8
+  [2, 60],
+  [2, 61],
+  [2, 62],
+  [2, 63],
+  [2, 60],
+  [2, 61],
+  [2, 62],
+  [2, 63],
+  [2, 60],
+  [2, 61],
+  [2, 62],
+  [2, 63],
 ]
 
-const gameLogic = note => {
+const gameLogic = (channel, note) => {
 
   switch (currentGameState) {
     case gameStates.initial:
-      if (note === 2) {
+      if (channel === 1 && note === 60) {
         currentGameState = gameStates.active
         sound.frequency = note * 10;
         sound.play()
+        clearTimeout(soundTimer)
+        soundTimer = setTimeout(() => {
+          sound.stop()
+        }, 500);
       }
       break;
 
     case gameStates.active:
-      if (note < 17) {
-        sound.frequency = note * 10;
-        sound.play()
-      }
-      if (note === 27) {
+      sound.frequency = (channel + note) * 10;
+      sound.play()
+      clearTimeout(soundTimer)
+      soundTimer = setTimeout(() => {
+        sound.stop()
+      }, 500);
+
+      if (channel === 7 && note === 60) {
         currentGameState = gameStates.puzzle;
         sound.frequency = note * 10;
         sound.play()
+        clearTimeout(soundTimer)
+        soundTimer = setTimeout(() => {
+          sound.stop()
+        }, 500);
       }
       break;
 
@@ -162,6 +182,10 @@ const gameLogic = note => {
       if (note < 17) {
         sound.frequency = note * 10;
         sound.play()
+        clearTimeout(soundTimer)
+        soundTimer = setTimeout(() => {
+          sound.stop()
+        }, 500);
       }
 
       const compare = lastTouched.slice(lastTouched.length - 12)
@@ -201,6 +225,7 @@ const sound = new pizzicato.Sound({
   }
 })
 
+let soundTimer
 
 // start by pressing church 27 plays file
 // when active, piano plays
@@ -213,38 +238,25 @@ const sound = new pizzicato.Sound({
 
 // var easymidi = require('easymidi');
 import * as easymidi from "easymidi";
-import {
-  log
-} from 'util'
 
-const inputs = easymidi.getInputs();
-console.log(inputs)
+const inputAddresses = easymidi.getInputs();
+const inputs = []
+console.log(inputAddresses)
 
-const input = new easymidi.Input(inputs[0]);
+inputAddresses.forEach(address => {
 
-input.on('noteon', msg => {
+  const input = new easymidi.Input(address);
 
-  if (msg.note === 48) {
-    recordTouch(msg.note - 46, true);
-  } else if (msg.note > 48) {
-    recordTouch(msg.note - 45, true);
-  } else {
-    recordTouch(msg.note, true);
-  }
+  input.on('noteon', msg => {
 
-});
+    console.log(msg);
+    recordTouch(msg.channel, msg.note, true);
 
-input.on('noteoff', msg => {
+  });
 
-  if (msg.note === 48) {
-    recordTouch(msg.note - 46, false);
-  } else if (msg.note > 48) {
-    recordTouch(msg.note - 45, false);
-  } else {
-    recordTouch(msg.note, false);
-  }
+  input.on('noteoff', msg => {
+    recordTouch(msg.channel, msg.note, false);
+  })
 
-  if (tapestry.every(val => val === false)) {
-    sound.stop()
-  }
+  inputs.push(input)
 })
