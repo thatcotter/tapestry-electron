@@ -26,6 +26,10 @@
         <div class="name">Platform:</div>
         <div class="value">{{ platform }}</div>
       </div>
+      <div class="item">
+        <div class="name">Store.count:</div>
+        <div class="value">{{ this.$store.state.count }}</div>
+      </div>
     </div>
   </div>
 </template>

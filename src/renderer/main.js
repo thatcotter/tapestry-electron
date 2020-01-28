@@ -9,85 +9,85 @@ if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
-/* eslint-disable no-new */
-// new Vue({
-//   components: {
-//     App
-//   },
-//   router,
-//   store,
-//   template: '<App/>'
-// }).$mount('#app')
+// @ts-ignore
+new Vue({
+  components: {
+    App
+  },
+  router,
+  store,
+  template: '<App/>'
+}).$mount('#app')
 
 //-----------------------------------------------------
 // Dom Manipulation 
 //-----------------------------------------------------
-document.body.onload = () => {
-  const app = document.getElementById('app')
-  let header = document.createElement('h1')
-  header.id = "gameState"
-  header.textContent = "State: Initial"
-  app.appendChild(header)
+// document.body.onload = () => {
+//   const app = document.getElementById('app')
+//   let header = document.createElement('h1')
+//   header.id = "gameState"
+//   header.textContent = "State: Initial"
+//   app.appendChild(header)
 
-  let header2 = document.createElement('h1')
-  header2.textContent = "Last Touchpoints"
-  app.appendChild(header2)
+//   let header2 = document.createElement('h1')
+//   header2.textContent = "Last Touchpoints"
+//   app.appendChild(header2)
 
-  let list1 = document.createElement('ol')
-  list1.id = "lastTouched"
-  list1.className = "horizontal"
-  app.appendChild(list1)
+//   let list1 = document.createElement('ol')
+//   list1.id = "lastTouched"
+//   list1.className = "horizontal"
+//   app.appendChild(list1)
 
-  // let header3 = document.createElement('h1')
-  // header3.textContent = "Tapestry State"
-  // app.appendChild(header3)
+//   // let header3 = document.createElement('h1')
+//   // header3.textContent = "Tapestry State"
+//   // app.appendChild(header3)
 
-  // let list2 = document.createElement('ol')
-  // list2.id = "states"
-  // list2.className = "horizontal"
-  // app.appendChild(list2)
+//   // let list2 = document.createElement('ol')
+//   // list2.id = "states"
+//   // list2.className = "horizontal"
+//   // app.appendChild(list2)
 
-  // for (let i = 0; i < 64; i++) {
-  //   const element = document.createElement('li');
-  //   element.textContent = tapestry[i]
-  //   list2.appendChild(element)
-  // }
-}
+//   // for (let i = 0; i < 64; i++) {
+//   //   const element = document.createElement('li');
+//   //   element.textContent = tapestry[i]
+//   //   list2.appendChild(element)
+//   // }
+// }
 
-const step = () => {
+// const step = () => {
 
-  if (lastTouched.length > 12) {
-    lastTouched.splice(0, 1)
-  }
+//   if (lastTouched.length > 12) {
+//     lastTouched.splice(0, 1)
+//   }
 
-  let stateHeader = document.getElementById('gameState')
-  stateHeader.textContent = `State: ${currentGameState}`
+//   let stateHeader = document.getElementById('gameState')
+//   stateHeader.textContent = `State: ${currentGameState}`
 
-  let record = document.getElementById('lastTouched')
-  record.innerHTML = ""
+//   let record = document.getElementById('lastTouched')
+//   record.innerHTML = ""
 
-  lastTouched.forEach((state, i) => {
-    let touch = document.createElement('ol')
-    touch.textContent = "Last Touchpoints"
-    touch.textContent = state
-    touch.style.color = 'blue'
-    record.appendChild(touch)
-  });
+//   lastTouched.forEach((state, i) => {
+//     let touch = document.createElement('ol')
+//     touch.textContent = "Last Touchpoints"
+//     touch.textContent = state
+//     touch.style.color = 'blue'
+//     record.appendChild(touch)
+//   });
 
 
-  // let states
-  // if (document.getElementById('states').childNodes) {
-  //   states = document.getElementById('states').childNodes
-  // }
+//   // let states
+//   // if (document.getElementById('states').childNodes) {
+//   //   states = document.getElementById('states').childNodes
+//   // }
 
-  // states.forEach((state, i) => {
-  //   states[i].textContent = tapestry[i]
-  //   states[i].style.color = (tapestry[i]) ? "green" : "black"
-  // });
-}
+//   // states.forEach((state, i) => {
+//   //   states[i].textContent = tapestry[i]
+//   //   states[i].style.color = (tapestry[i]) ? "green" : "black"
+//   // });
+// }
 // window.requestAnimationFrame(step)
 
-setInterval(step, 100);
+// setInterval(step, 100);
 
 
 
@@ -130,18 +130,18 @@ const gameStates = {
 
 let currentGameState = gameStates.initial;
 let melody = [
-  [2, 60],
-  [2, 61],
-  [2, 62],
-  [2, 63],
-  [2, 60],
-  [2, 61],
-  [2, 62],
-  [2, 63],
-  [2, 60],
-  [2, 61],
-  [2, 62],
-  [2, 63],
+  [1, 60],
+  [1, 61],
+  [1, 62],
+  [1, 63],
+  [1, 60],
+  [1, 61],
+  [1, 62],
+  [1, 63],
+  [1, 60],
+  [1, 61],
+  [1, 62],
+  [1, 63],
 ]
 
 const gameLogic = (channel, note) => {
@@ -241,7 +241,22 @@ import * as easymidi from "easymidi";
 
 const inputAddresses = easymidi.getInputs();
 const inputs = []
-console.log(inputAddresses)
+
+const vin = new easymidi.Input('virtualOut', true)
+
+vin.on('noteon', msg => {
+
+  console.log(msg);
+  recordTouch(msg.channel, msg.note, true);
+
+});
+
+vin.on('noteoff', msg => {
+  recordTouch(msg.channel, msg.note, false);
+})
+
+inputs.push(vin)
+
 
 inputAddresses.forEach(address => {
 
