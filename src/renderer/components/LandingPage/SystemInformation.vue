@@ -28,13 +28,26 @@
       </div>
       <div class="item">
         <div class="name">Store.count:</div>
-        <div class="value">{{ this.$store.state.count }}</div>
+        <div class="value">{{ count }}</div>
+      </div>
+      <div class="item">
+        <div class="name">Store.increment:</div>
+        <button v-on:click="increment">increment</button>
+      </div>
+      <div class="item">
+        <div class="name">Store.decrement:</div>
+        <button v-on:click="decrement">decrement</button>
+      </div>
+      <div class="item">
+        <div class="name">Store.reset:</div>
+        <button v-on:click="reset">reset</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import { mapState, mapActions } from "vuex"
   export default {
     data () {
       return {
@@ -45,7 +58,13 @@
         platform: require('os').platform(),
         vue: require('vue/package.json').version
       }
-    }
+    },
+    methods: {
+      ...mapActions(['increment','decrement','reset'])
+    },
+    computed: {
+      ...mapState(['count'])
+    },
   }
 </script>
 

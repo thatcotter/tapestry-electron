@@ -4,21 +4,45 @@ import Vuex from 'vuex'
 import { createPersistedState, createSharedMutations } from 'vuex-electron'
 
 import modules from './modules'
+import { stat } from 'fs'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    count: 0
+    messages: [],
+    puzzles: []
+  },
+  getters: {
+    recentMessages: state => {
+      let temp = JSON.parse(JSON.stringify(state));
+      return temp.messages.sort((a,b) => a.time < b.time ? 1 : -1)
+    }
   },
   mutations: {
-    increment(state) {
-      state.count++
+    clearMessages(state){
+      state.messages = []
+    },
+    resetPuzzles(state){
+      state.puzzles = []
+    },
+    newMessage(state, payload) {
+      state.messages.push(payload)
     }
   },
   actions: {
-    increment(store) {
-      store.commit("increment")
+    reset(store) {
+      store.commit('clearMessages')
+      store.commit('resetPuzzles')
+    },
+    clearMessages(store) {
+      store.commit('clearMessages')
+    },
+    resetPuzzles(store) {
+      store.commit('resetPuzzles')
+    },
+    newMessage(store, payload) {
+      store.commit('newMessage', payload)
     }
   },
   modules,
