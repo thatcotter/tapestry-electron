@@ -50,10 +50,12 @@ export default Vue.extend({
 
     .in-card {
         width: 90%;
-        height: 10vh;
+        // height: 10vh;
+        height: auto;
 
-        padding-top: 5%; 
-        padding-left: 10%;
+        padding: 5% 10%; 
+        // padding-bottom: 5%; 
+        // padding-left: 10%;
         margin-bottom: 10px;
 
         border-radius: 2em;

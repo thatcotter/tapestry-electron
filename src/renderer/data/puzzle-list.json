@@ -5,26 +5,28 @@
         "dependencies": [],
         "solution": {
             "type": "press",
-            "button": 7
+            "buttons": [1]
         }
     },
     "puzzles": [
         {
-            "id": "1",
+            "id": 1,
             "name": "1st Puzzle",
             "dependencies": [],
             "solution": {
                 "type": "press",
-                "button": 7
+                "buttons": [7]
             }
         },
         {
-            "id": "2",
+            "id": 2,
             "name": "2nd Puzzle",
-            "dependencies": [1],
+            "dependencies": {
+                "1": false
+            },
             "solution": {
                 "type": "sequence",
-                "button": [3,4,5]
+                "buttons": [3,4,5]
             }
         }
     ]

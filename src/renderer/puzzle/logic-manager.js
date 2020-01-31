@@ -3,6 +3,15 @@
 //-----------------------------------------------------
 
 import store from '../store/index'
+import * as fs from 'fs'
+import path from 'path'
+import * as _ from 'lodash'
+
+let mapping
+fs.readFile(path.resolve(__dirname, '../data/button-mapping.json'), (err, data) => {
+    if (err) throw err
+    mapping = JSON.parse(data)
+})
 
 export const logicManager = store => {
     store.subscribe((mutation, state) => {
@@ -12,6 +21,10 @@ export const logicManager = store => {
         switch (mutation.type) {
             case 'newMessage':
                 onMessage(mutation.payload)
+                break;
+
+            case 'resolvePuzzle':
+                onSolved(mutation.payload)
                 break;
         
             default:
@@ -23,11 +36,96 @@ export const logicManager = store => {
 logicManager(store)
 
 const onMessage = payload => {
-
+    const actives = store.getters.activePuzzles
+    
+    actives.forEach(puzzle => {
+        const lock = [...puzzle.solution.buttons]
+        const key = []
+        store.getters.lastNMessages(lock.length).forEach(val => {
+            key.push(mapping[`${val.note}`].id / 1)
+        })
+        if (_.isEqual(key, lock)) {
+            store.dispatch('resolvePuzzle', puzzle.id)
+        }
+    });
 }
 
-const onSolved = payload => {}
+const onSolved = payload => {
+    let numProcessed = 0
+    store.getters.inactivePuzzles.forEach(val => {
+        if (!val.solved) {
+            if (!val.available) {
+                for (const key in val.dependencies) {
+                    if (val.dependencies.hasOwnProperty(key)) {
+                        const element = val.dependencies[key];
+                        if (store.getters.solvedPuzzleByID(key) != null) {
+                            console.log('unlocking dep')
+                            store.dispatch('unlockDependency', {
+                                id: val.id,
+                                key: key
+                            })
+                        }
+                    }
+                }    
+            }
+        }  
+        numProcessed++
+        if (numProcessed >= store.getters.inactivePuzzles.length) {
+            setTimeout(() => {
+                onDepUnlock()
+            }, 10);
+        }
+    })    
+}
+
+const onDepUnlock = () => {
+    console.log('test............')
+    store.getters.inactivePuzzles.forEach(val => {
+        if (!val.solved) {
+            if (!val.available) {
+                let check = true
+                console.log("dependencies is ", {...val.dependencies})
+                for (const key in val.dependencies) {
+                    if (val.dependencies.hasOwnProperty(key)) {
+                        const element = val.dependencies[key];
+                        console.log("element at ", key, " is ", element)
+                        if (element === false) {
+                            check = false
+                        }
+                    }
+                }
+                console.log(check)
+                if (check) {
+                    store.dispatch('unlockPuzzle', val.id)
+                }
+                console.log(val)
+            }
+        }
+    })
+    console.log(store.getters.inactivePuzzles[0])
+}
 
 
 
+
+// checkPuzzleAvailability(state, getters) {
+//     for (let i = 0; i < state.puzzles.length; i++) {
+//         if (state.puzzles[i].solved) continue
+//         if (state.puzzles[i].available) continue
+//         let check = true
+//         for (const key in state.puzzles[i].dependencies) {
+//             if (state.puzzles[i].dependencies.hasOwnProperty(key)) {
+//                 const element = state.puzzles[i].dependencies[key];
+//                 if (getters.solvedPuzzlesIDs.contains(element)) {
+//                     state.puzzles[i].dependencies[key] = true
+//                 }
+//                 if (element === false) {
+//                     check = false
+//                 }
+//             }
+//         }
+//         state.puzzles[i].available = check
+//         console.log(state.puzzles[i])
+//     }
+// },
 

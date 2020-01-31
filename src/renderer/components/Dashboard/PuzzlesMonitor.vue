@@ -3,18 +3,13 @@
         <!-- {{ puzzles }} -->
         <div class="title">Solved:</div>
         <!-- {{ solvedPuzzles }} -->
-        <div class="in-card" 
+        <div class="in-card solved" 
              v-for="puzzle in solvedPuzzles" 
             :id="'m-'+puzzle.note">
             <p>
                 {{ puzzle.id }}:
                 {{ puzzle.name }}
             </p>
-            <h3>
-                <!-- Chan: {{ puzzle.channel }}, 
-                Note: {{ puzzle.note }}, 
-                Vel: {{ puzzle.velocity }} -->
-            </h3>
         </div>
 
         <div class="title">Active:</div>
@@ -24,13 +19,9 @@
             :id="'m-'+puzzle.note">
             <p>
                 {{ puzzle.id }}:
-                {{ puzzle.name }}
+                {{ puzzle.name }},
             </p>
-            <h3>
-                <!-- Chan: {{ puzzle.channel }}, 
-                Note: {{ puzzle.note }}, 
-                Vel: {{ puzzle.velocity }} -->
-            </h3>
+            <p>Solution: {{ puzzle.solution.buttons }}</p>
         </div>
 
         <div class="title">Inactive:</div>
@@ -40,13 +31,9 @@
             :id="'m-'+puzzle.note">
             <p>
                 {{ puzzle.id }}:
-                {{ puzzle.name }}
+                {{ puzzle.name }},
             </p>
-            <h3>
-                <!-- Chan: {{ puzzle.channel }}, 
-                Note: {{ puzzle.note }}, 
-                Vel: {{ puzzle.velocity }} -->
-            </h3>
+            <p>Solution: {{ puzzle.solution.buttons }}</p>
         </div>
     </div>
 </template>
@@ -66,8 +53,8 @@ export default Vue.extend({
 <style lang="scss" scoped>
 
     .in-card {
-        height: 3vh;
-        padding-top: 2.5%; 
+        height: auto;
+        padding: 10px; 
         padding-left: 10%;
         margin-bottom: 10px;
     }

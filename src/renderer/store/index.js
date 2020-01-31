@@ -16,7 +16,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     messages: [],
-    puzzles: ['test']
+    puzzles: []
   },
   getters: {
     recentMessages: state => {
@@ -32,11 +32,19 @@ export default new Vuex.Store({
     solvedPuzzles: state => {
       return state.puzzles.filter(puzzle => puzzle.solved)
     },
+    solvedPuzzleByID: (state, getters) => id => {
+      // return getters.solvedPuzzles.find(val => val.id === id)
+      for (let i = 0; i < getters.solvedPuzzles.length; i++) {
+        const element = getters.solvedPuzzles[i];
+        if(element.id == id)
+          return element
+      }
+    },
     activePuzzles: state => {
       return state.puzzles.filter(puzzle => puzzle.available)
     },
     inactivePuzzles: state => {
-      return state.puzzles.filter(puzzle => puzzle.available === false)
+      return state.puzzles.filter(puzzle => puzzle.available === false && puzzle.solved === false)
     }
   },
   mutations: {
@@ -58,12 +66,24 @@ export default new Vuex.Store({
             state.puzzles[i].id === payload)
           state.puzzles[i].available = true
       }
+      console.log(state.puzzles)
+    },
+    unlockDependency(state, payload) {
+      //payload.id, payload.key
+      for (let i = 0; i < state.puzzles.length; i++) {
+        if (state.puzzles[i].id != payload.id) continue
+        state.puzzles[i].dependencies[payload.key] = true
+      }
     },
     resolvePuzzle(state, payload) {
       for (let i = 0; i < state.puzzles.length; i++) {
-        if (state.puzzles[i].solved === false &&
-          state.puzzles[i].id === payload)
+        if (state.puzzles[i].available === true &&
+            state.puzzles[i].solved === false &&
+            state.puzzles[i].id === payload) {
+          console.log(state.puzzles[i].id, ' solved!')
+          state.puzzles[i].available = false
           state.puzzles[i].solved = true
+        }
       }
     }
   },
@@ -72,16 +92,17 @@ export default new Vuex.Store({
       store.commit('clearMessages')
       store.commit('clearPuzzles')
     },
-    clearPuzzles(store){
-      store.commit('clearPuzzles')
+    newMessage(store, payload) {
+      store.commit('newMessage', payload)
     },
     clearMessages(store) {
       store.commit('clearMessages')
     },
+    clearPuzzles(store){
+      store.commit('clearPuzzles')
+    },
     resetPuzzles(store) {
       store.dispatch('clearPuzzles')
-      // store.commit('clearPuzzles')
-      
       const data = fs.readFile(path.resolve(__dirname, '../data/puzzle-list.json'), (err, data) => {
         if (err) throw err
         const obj = JSON.parse(data)
@@ -91,28 +112,15 @@ export default new Vuex.Store({
           store.commit('addPuzzle', temp)
         });
       })
-
-      // fs.readFile('../../data/puzzle-list.json', 'utf8', (err, data) => {
-      //   if(err) throw err
-      //   const obj = JSON.parse(data)
-      //   console.log(data)
-        // obj.puzzles.forEach(config => {
-        //   console.log(config)
-          // const temp = new Puzzle(config)
-          // state.puzzles.push(temp)
-        // });
-      // })
-      // const data = require('../data/puzzle-list.json')
-      //   .then(() => {
-      //     data.puzzles.forEach(config => {
-      //       console.log(config)
-      //       // const temp = new Puzzle(config)
-      //       // state.puzzles.push(temp)
-      //     });
-      //   })
     },
-    newMessage(store, payload) {
-      store.commit('newMessage', payload)
+    resolvePuzzle(store, payload) {
+      store.commit('resolvePuzzle', payload)
+    },
+    unlockDependency(store, payload) {
+      store.commit('unlockDependency', payload)
+    },
+    unlockPuzzle(store, payload) {
+      store.commit('unlockPuzzle', payload)
     }
   },
   modules,
