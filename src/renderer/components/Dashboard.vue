@@ -14,8 +14,11 @@
             <div class="right-side">
                 <div class="doc">
                     <div class="title">Game State</div>
-                    <button @click="resetPuzzles">Reset Puzzles</button><br><br>
+                    <!-- <button @click="clearPuzzles">Clear Puzzles</button> -->
+                    <button @click="resetPuzzles">Reload Puzzles</button>
+                    <br><br>
                 </div>
+                <PuzzlesMonitor></PuzzlesMonitor>
                 <!-- TODO: List of puzzles (solved, active, all) -->
             </div>
         </main>
@@ -26,11 +29,13 @@
 import Vue from 'vue'
 import { mapState, mapActions } from "vuex"
 import InputsMonitor from './Dashboard/InputsMonitor'
+import PuzzlesMonitor from './Dashboard/PuzzlesMonitor'
+
 export default Vue.extend({
     name: 'dashboard',
-    components: { InputsMonitor },
+    components: { InputsMonitor, PuzzlesMonitor },
     methods: {
-        ...mapActions(['clearMessages', 'resetPuzzles','reset'])
+        ...mapActions(['clearMessages', 'clearPuzzles', 'resetPuzzles','reset'])
     }
 })
 </script>
