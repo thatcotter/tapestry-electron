@@ -41,9 +41,11 @@ const onMessage = payload => {
     actives.forEach(puzzle => {
         const lock = [...puzzle.solution.buttons]
         const key = []
-        store.getters.lastNMessages(lock.length).forEach(val => {
-            key.push(mapping[`${val.note}`].id / 1)
-        })
+        store.getters.lastNMessages(lock.length)
+            .reverse()
+            .forEach(val => {
+                key.push(mapping[`${val.note}`].id / 1)
+            })
         if (_.isEqual(key, lock)) {
             store.dispatch('resolvePuzzle', puzzle.id)
         }
@@ -59,7 +61,7 @@ const onSolved = payload => {
                     if (val.dependencies.hasOwnProperty(key)) {
                         const element = val.dependencies[key];
                         if (store.getters.solvedPuzzleByID(key) != null) {
-                            console.log('unlocking dep')
+                            // console.log('unlocking dep')
                             store.dispatch('unlockDependency', {
                                 id: val.id,
                                 key: key
@@ -79,7 +81,6 @@ const onSolved = payload => {
 }
 
 const onDepUnlock = () => {
-    console.log('test............')
     store.getters.inactivePuzzles.forEach(val => {
         if (!val.solved) {
             if (!val.available) {
@@ -108,24 +109,4 @@ const onDepUnlock = () => {
 
 
 
-// checkPuzzleAvailability(state, getters) {
-//     for (let i = 0; i < state.puzzles.length; i++) {
-//         if (state.puzzles[i].solved) continue
-//         if (state.puzzles[i].available) continue
-//         let check = true
-//         for (const key in state.puzzles[i].dependencies) {
-//             if (state.puzzles[i].dependencies.hasOwnProperty(key)) {
-//                 const element = state.puzzles[i].dependencies[key];
-//                 if (getters.solvedPuzzlesIDs.contains(element)) {
-//                     state.puzzles[i].dependencies[key] = true
-//                 }
-//                 if (element === false) {
-//                     check = false
-//                 }
-//             }
-//         }
-//         state.puzzles[i].available = check
-//         console.log(state.puzzles[i])
-//     }
-// },
 
