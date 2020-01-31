@@ -33,7 +33,7 @@
                 {{ puzzle.id }}:
                 {{ puzzle.name }},
             </p>
-            <p>Solution: {{ puzzle.solution.buttons }}</p>
+            <p>Dependencies: {{ puzzle.dependencies }}</p>
         </div>
     </div>
 </template>
