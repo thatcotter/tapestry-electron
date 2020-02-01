@@ -53,8 +53,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "easymidi": "^1.0.2",
-    "midi": "^1.0.0",
+    "easymidi": "^1.0.3",
     "pizzicato": "^0.6.4",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",

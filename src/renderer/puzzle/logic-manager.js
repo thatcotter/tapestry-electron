@@ -7,11 +7,14 @@ import * as fs from 'fs'
 import path from 'path'
 import * as _ from 'lodash'
 
-let mapping
-fs.readFile(path.resolve(__dirname, '../data/button-mapping.json'), (err, data) => {
-    if (err) throw err
-    mapping = JSON.parse(data)
-})
+// import * as mapping from '../data/button-mapping.json'
+const mapping = require('../data/button-mapping.json')
+// console.log(mapping)
+// let mapping
+// fs.readFile(path.resolve(__dirname, '../data/button-mapping.json'), (err, data) => {
+//     if (err) throw err
+//     mapping = JSON.parse(data)
+// })
 
 export const logicManager = store => {
     store.subscribe((mutation, state) => {
@@ -44,7 +47,7 @@ const onMessage = payload => {
         store.getters.lastNMessages(lock.length)
             .reverse()
             .forEach(val => {
-                key.push(mapping[`${val.note}`].id / 1)
+                key.push(mapping[val.note].id / 1)
             })
         if (_.isEqual(key, lock)) {
             store.dispatch('resolvePuzzle', puzzle.id)
@@ -61,7 +64,6 @@ const onSolved = payload => {
                     if (val.dependencies.hasOwnProperty(key)) {
                         const element = val.dependencies[key];
                         if (store.getters.solvedPuzzleByID(key) != null) {
-                            // console.log('unlocking dep')
                             store.dispatch('unlockDependency', {
                                 id: val.id,
                                 key: key

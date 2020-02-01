@@ -8,8 +8,7 @@ import * as fs from 'fs'
 import path from 'path'
 
 import Puzzle from '../puzzle/puzzle'
-
-import * as puzzleData from '../data/puzzle-list'
+const puzzleData = require('../data/puzzle-list.json')
 
 Vue.use(Vuex)
 
@@ -33,7 +32,6 @@ export default new Vuex.Store({
       return state.puzzles.filter(puzzle => puzzle.solved)
     },
     solvedPuzzleByID: (state, getters) => id => {
-      // return getters.solvedPuzzles.find(val => val.id === id)
       for (let i = 0; i < getters.solvedPuzzles.length; i++) {
         const element = getters.solvedPuzzles[i];
         if(element.id == id)
@@ -103,15 +101,19 @@ export default new Vuex.Store({
     },
     resetPuzzles(store) {
       store.dispatch('clearPuzzles')
-      const data = fs.readFile(path.resolve(__dirname, '../data/puzzle-list.json'), (err, data) => {
-        if (err) throw err
-        const obj = JSON.parse(data)
-        obj.puzzles.forEach(config => {
-          console.log(config)
-          const temp = new Puzzle(config)
-          store.commit('addPuzzle', temp)
-        });
-      })
+      console.log(puzzleData.puzzles)
+      puzzleData.puzzles.forEach(config => {
+        for (const key in config.dependencies) {
+          if (config.dependencies.hasOwnProperty(key)) {
+            if (config.dependencies[key]) {
+              config.dependencies[key] = false
+            }
+          }
+        }
+        console.log(config)
+        const temp = new Puzzle(config)
+        store.commit('addPuzzle', temp)
+      });
     },
     resolvePuzzle(store, payload) {
       store.commit('resolvePuzzle', payload)

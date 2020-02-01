@@ -14,25 +14,21 @@
 </template>
 
 
-<script lang="ts">
-import Vue from 'vue'
-import { mapState, mapActions, mapGetters } from "vuex"
-const mapping = require('../../data/button-mapping.json')
-export default Vue.extend({
-    name: 'InputsMonitor',
-    data() {
-        return {
-            buttonMapping: mapping
-        }
-    },
-    methods: {
-        ...mapActions(['increment','decrement','reset'])
-    },
-    computed: {
-        ...mapState(['messages']),
-        ...mapGetters(['recentMessages', 'lastNMessages']),
-    },
-})
+<script>
+    import Vue from 'vue'
+    import { mapGetters } from "vuex"
+    const mapping = require('../../data/button-mapping.json')
+    export default Vue.extend({
+        name: 'InputsMonitor',
+        data() {
+            return {
+                buttonMapping: mapping
+            }
+        },
+        computed: {
+            ...mapGetters(['recentMessages', 'lastNMessages']),
+        },
+    })
 </script>
 
 

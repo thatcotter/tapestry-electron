@@ -2,6 +2,7 @@
     <div id="wrapper">
         <h1>Tapestry Dashboard</h1>
         <br>
+        <!-- <p>{{this.$store.state.puzzles}}</p> -->
         <main>
             <div class="left-side">
                 <div class="doc">
@@ -25,19 +26,19 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-import { mapState, mapActions } from "vuex"
-import InputsMonitor from './Dashboard/InputsMonitor'
-import PuzzlesMonitor from './Dashboard/PuzzlesMonitor'
+<script>
+    import Vue from 'vue'
+    import { mapState, mapActions } from "vuex"
+    import InputsMonitor from './Dashboard/InputsMonitor'
+    import PuzzlesMonitor from './Dashboard/PuzzlesMonitor'
 
-export default Vue.extend({
-    name: 'dashboard',
-    components: { InputsMonitor, PuzzlesMonitor },
-    methods: {
-        ...mapActions(['clearMessages', 'clearPuzzles', 'resetPuzzles','reset'])
-    }
-})
+    export default Vue.extend({
+        name: 'dashboard',
+        components: { InputsMonitor, PuzzlesMonitor },
+        methods: {
+            ...mapActions(['clearMessages', 'clearPuzzles', 'resetPuzzles','reset'])
+        }
+    })
 </script>
 
 <style lang="scss">

@@ -3,7 +3,8 @@ import {
   BrowserWindow
 } from 'electron'
 
-import '../renderer/store/index'
+// import '../renderer/store/index'
+const store = require('../renderer/store/index')
 
 /**
  * Set `__static` path to static files in production
@@ -29,6 +30,8 @@ function createWindow() {
   })
 
   mainWindow.loadURL(winURL)
+
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     mainWindow = null
