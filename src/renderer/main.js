@@ -9,6 +9,9 @@ import * as path from 'path';
 
 import midiInputs from './midiParsing'
 import logicManager from './puzzle/logic-manager'
+// import sounds from './audio/audioPlayback'
+
+// console.log(sounds)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
@@ -23,3 +26,14 @@ new Vue({
   store,
   template: '<App/>'
 }).$mount('#app')
+
+import Pizzicato from 'pizzicato'
+
+var sawtoothWave = new Pizzicato.Sound({
+  source: 'wave',
+  options: {
+    type: 'sawtooth'
+  }
+});
+
+// sawtoothWave.play()

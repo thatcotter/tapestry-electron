@@ -11,22 +11,33 @@
     "puzzles": [
         {
             "id": 1,
-            "name": "1st Puzzle",
+            "name": "Exit Attract Mode",
             "dependencies": [],
             "solution": {
                 "type": "press",
-                "buttons": [7]
+                "buttons": [2]
             }
         },
         {
             "id": 2,
-            "name": "2nd Puzzle",
+            "name": "Start Quest",
             "dependencies": {
                 "1": false
             },
             "solution": {
-                "type": "sequence",
-                "buttons": [3,4,5]
+                "type": "press",
+                "buttons": [1]
+            }
+        },
+        {
+            "id": 3,
+            "name": "Piano Sequence",
+            "dependencies": {
+                "2": false
+            },
+            "solution": {
+                "type": "press",
+                "buttons": [4,5,7]
             }
         }
     ]

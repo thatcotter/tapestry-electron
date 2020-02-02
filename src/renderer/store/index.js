@@ -8,7 +8,8 @@ import * as fs from 'fs'
 import path from 'path'
 
 import Puzzle from '../puzzle/puzzle'
-const puzzleData = require('../data/puzzle-list.json')
+const dataOrigin = require('../data/puzzle-list.json')
+let puzzleData = Object.assign({}, dataOrigin)
 
 Vue.use(Vuex)
 
@@ -101,6 +102,7 @@ export default new Vuex.Store({
     },
     resetPuzzles(store) {
       store.dispatch('clearPuzzles')
+      puzzleData = Object.assign({}, dataOrigin)
       console.log(puzzleData.puzzles)
       puzzleData.puzzles.forEach(config => {
         for (const key in config.dependencies) {

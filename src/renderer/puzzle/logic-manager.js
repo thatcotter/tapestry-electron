@@ -7,14 +7,9 @@ import * as fs from 'fs'
 import path from 'path'
 import * as _ from 'lodash'
 
-// import * as mapping from '../data/button-mapping.json'
+// @ts-ignore
 const mapping = require('../data/button-mapping.json')
-// console.log(mapping)
-// let mapping
-// fs.readFile(path.resolve(__dirname, '../data/button-mapping.json'), (err, data) => {
-//     if (err) throw err
-//     mapping = JSON.parse(data)
-// })
+
 
 export const logicManager = store => {
     store.subscribe((mutation, state) => {

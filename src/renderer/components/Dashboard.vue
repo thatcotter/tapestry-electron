@@ -36,7 +36,7 @@
         name: 'dashboard',
         components: { InputsMonitor, PuzzlesMonitor },
         methods: {
-            ...mapActions(['clearMessages', 'clearPuzzles', 'resetPuzzles','reset'])
+            ...mapActions(['clearMessages', 'resetPuzzles'])
         }
     })
 </script>
