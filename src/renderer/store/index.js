@@ -16,6 +16,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     messages: [],
+    midiConnections: [],
     puzzles: []
   },
   getters: {
@@ -25,6 +26,9 @@ export default new Vuex.Store({
     },
     lastNMessages: (state, getters) => n => {
       return getters.recentMessages.slice(0, n)
+    },
+    midiConnections: (state, getters) => {
+      return state.midiConnections
     },
     getPuzzleById: state => id => {
       return state.puzzles.filter(puzzle => puzzle.id === id)
@@ -56,6 +60,13 @@ export default new Vuex.Store({
     newMessage(state, payload) {
       state.messages.push(payload)
     },
+    addConnection(state, payload){
+      if (state.midiConnections.includes(payload)) return
+      state.midiConnections.push(payload)
+    },
+    clearConnections(state, payload) {
+      state.midiConnections = []
+    },
     addPuzzle(state, payload){
       state.puzzles.push(payload)
     },
@@ -68,7 +79,6 @@ export default new Vuex.Store({
       console.log(state.puzzles)
     },
     unlockDependency(state, payload) {
-      //payload.id, payload.key
       for (let i = 0; i < state.puzzles.length; i++) {
         if (state.puzzles[i].id != payload.id) continue
         state.puzzles[i].dependencies[payload.key] = true
@@ -96,6 +106,12 @@ export default new Vuex.Store({
     },
     clearMessages(store) {
       store.commit('clearMessages')
+    },
+    addConnection(store, payload) {
+      store.commit('addConnection', payload)
+    },
+    clearConnections(store, payload) {
+      store.commit('clearConnections', payload)
     },
     clearPuzzles(store){
       store.commit('clearPuzzles')

@@ -1,6 +1,11 @@
 <template>
     <div>
-        <div class="in-card" v-for="message in lastNMessages(10)" :id="'m-'+message.note">
+        <div 
+            class="in-card" 
+            v-for="message in lastNMessages(10)" 
+            v-bind:key="message.id"
+            :id="'m-'+message.note"
+        >
             <h2>{{ buttonMapping[`${message.note}`].id }}:
                 {{ buttonMapping[`${message.note}`].name }}
             </h2>
@@ -46,12 +51,9 @@
 
     .in-card {
         width: 90%;
-        // height: 10vh;
         height: auto;
 
-        padding: 5% 10%; 
-        // padding-bottom: 5%; 
-        // padding-left: 10%;
+        padding: 5% 10%;
         margin-bottom: 10px;
 
         border-radius: 2em;

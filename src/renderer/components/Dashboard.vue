@@ -6,9 +6,14 @@
         <main>
             <div class="left-side">
                 <div class="doc">
+                    <div class="title">Midi Connections</div>
+                    <button @click="clearConnections">Reset Connections</button><br><br>
+                </div>   
+                <ConnectionsMonitor></ConnectionsMonitor>
+                <div class="doc">
                     <div class="title">Last Inputs</div>
                     <button @click="clearMessages">Clear Messages</button><br><br>
-                </div>
+                </div>                
                 <InputsMonitor></InputsMonitor>
             </div>
 
@@ -30,13 +35,14 @@
     import Vue from 'vue'
     import { mapState, mapActions } from "vuex"
     import InputsMonitor from './Dashboard/InputsMonitor'
+    import ConnectionsMonitor from './Dashboard/ConnectionsMonitor'
     import PuzzlesMonitor from './Dashboard/PuzzlesMonitor'
 
     export default Vue.extend({
         name: 'dashboard',
-        components: { InputsMonitor, PuzzlesMonitor },
+        components: { InputsMonitor, ConnectionsMonitor, PuzzlesMonitor },
         methods: {
-            ...mapActions(['clearMessages', 'resetPuzzles'])
+            ...mapActions(['clearMessages', 'resetPuzzles', 'clearConnections'])
         }
     })
 </script>
