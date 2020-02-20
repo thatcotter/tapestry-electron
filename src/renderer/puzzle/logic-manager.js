@@ -72,7 +72,7 @@ const onSolved = payload => {
         if (numProcessed >= store.getters.inactivePuzzles.length) {
             setTimeout(() => {
                 onDepUnlock()
-            }, 10);
+            }, 48);
         }
     })    
 }

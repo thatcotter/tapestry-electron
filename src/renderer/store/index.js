@@ -8,7 +8,8 @@ import * as fs from 'fs'
 import path from 'path'
 
 import Puzzle from '../puzzle/puzzle'
-const dataOrigin = require('../data/puzzle-list.json')
+// const dataOrigin = require('../data/puzzle-list.json')
+const dataOrigin = require('../data/walk-quest.json')
 let puzzleData = Object.assign({}, dataOrigin)
 
 Vue.use(Vuex)

@@ -9,12 +9,8 @@ const virtualIn = new easymidi.Input('virtualIn', true);
 const virtualOut = new easymidi.Output('virtualOut', true);
 
 store.subscribe((mutation, state) => {
-    // console.log(mutation.type)
-    // console.log(mutation.payload)
-
     switch (mutation.type) {
         case 'clearConnections':
-            // onMessage(mutation.payload)
             resetConnections()
             break;
 

@@ -20,6 +20,7 @@
             <div class="right-side">
                 <div class="doc">
                     <div class="title">Game State</div>
+                    <dir class="title">Placeholder</dir>
                     <!-- <button @click="clearPuzzles">Clear Puzzles</button> -->
                     <button @click="resetPuzzles">Reload Puzzles</button>
                     <br><br>
