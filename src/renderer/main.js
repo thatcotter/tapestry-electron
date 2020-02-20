@@ -4,7 +4,7 @@ import axios from 'axios'
 // @ts-ignore
 import App from './App'
 import router from './router'
-import store from './store'
+import store from './store/store'
 import * as path from 'path';
 import {midiInputs} from './midiParsing'
 import {logicManager} from './puzzle/logic-manager'

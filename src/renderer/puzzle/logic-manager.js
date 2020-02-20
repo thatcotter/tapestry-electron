@@ -2,10 +2,9 @@
 //  puzzle logic
 //-----------------------------------------------------
 
-import store from '../store/index'
-import * as fs from 'fs'
-import path from 'path'
+import store from '../store/store'
 import * as _ from 'lodash'
+import {MODE} from '../store/mode'
 
 // @ts-ignore
 const mapping = require('../data/button-mapping.json')
@@ -13,12 +12,27 @@ const mapping = require('../data/button-mapping.json')
 
 export const logicManager = store => {
     store.subscribe((mutation, state) => {
+        console.log(state.mode)
         console.log(mutation.type)
         console.log(mutation.payload)
 
         switch (mutation.type) {
             case 'newMessage':
-                onMessage(mutation.payload)
+                switch (state.mode) {
+                    case MODE.Attract:
+                        console.log("onAttMessage!!")
+                        store.dispatch('menuMode')
+                        break;
+                    case MODE.Menu:
+                        onMenuMessage(mutation.payload)
+                        break;
+                    case MODE.Quest:
+                        onQuestMessage(mutation.payload)
+                        break;
+                    default:
+                        store.dispatch('attractMode')
+                        break
+                }
                 break;
 
             case 'resolvePuzzle':
@@ -33,7 +47,12 @@ export const logicManager = store => {
 
 logicManager(store)
 
-const onMessage = payload => {
+const onMenuMessage = payload => {
+    console.log("onMenuMessage!!")
+    store.dispatch('questMode')
+}
+
+const onQuestMessage = payload => {
     const actives = store.getters.activePuzzles
     
     actives.forEach(puzzle => {

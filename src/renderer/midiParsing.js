@@ -2,7 +2,7 @@
 //  midi parsing
 //-----------------------------------------------------
 import * as easymidi from "easymidi";
-import store from './store/index';
+import store from './store/store';
 
 const inputAddresses = easymidi.getInputs();
 const virtualIn = new easymidi.Input('virtualIn', true);

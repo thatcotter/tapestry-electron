@@ -2,7 +2,6 @@
     <div id="wrapper">
         <h1>Tapestry Dashboard</h1>
         <br>
-        <!-- <p>{{this.$store.state.puzzles}}</p> -->
         <main>
             <div class="left-side">
                 <div class="doc">
@@ -19,14 +18,13 @@
 
             <div class="right-side">
                 <div class="doc">
-                    <div class="title">Game State</div>
-                    <dir class="title">Placeholder</dir>
-                    <!-- <button @click="clearPuzzles">Clear Puzzles</button> -->
+                    <div class="title">Game State: {{modeName}}</div>
+                    <button @click="attractMode">Reset State</button>
                     <button @click="resetPuzzles">Reload Puzzles</button>
-                    <br><br>
                 </div>
-                <PuzzlesMonitor></PuzzlesMonitor>
-                <!-- TODO: List of puzzles (solved, active, all) -->
+                <div>
+                    <PuzzlesMonitor v-if="modeName === 'Quest Mode'"></PuzzlesMonitor>
+                </div>
             </div>
         </main>
     </div>
@@ -38,12 +36,22 @@
     import InputsMonitor from './Dashboard/InputsMonitor'
     import ConnectionsMonitor from './Dashboard/ConnectionsMonitor'
     import PuzzlesMonitor from './Dashboard/PuzzlesMonitor'
+    import {MODE} from '../store/mode'
 
     export default Vue.extend({
         name: 'dashboard',
-        components: { InputsMonitor, ConnectionsMonitor, PuzzlesMonitor },
+        components: { 
+            InputsMonitor, 
+            ConnectionsMonitor, 
+            PuzzlesMonitor 
+        },
         methods: {
-            ...mapActions(['clearMessages', 'resetPuzzles', 'clearConnections'])
+            ...mapActions(['clearMessages', 'resetPuzzles', 'clearConnections', 'attractMode'])
+        },
+        computed: {
+            modeName: function() {
+                return MODE.getDescription(this.$store.state.mode)
+            }
         }
     })
 </script>
@@ -97,6 +105,7 @@
     }
 
     .title {
+        text-transform: capitalize;
         color: #2c3e50;
         font-size: 20px;
         font-weight: bold;

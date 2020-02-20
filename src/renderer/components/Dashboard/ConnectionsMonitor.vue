@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <div 
             class="in-card" 
             v-for="connection in midiConnections" 

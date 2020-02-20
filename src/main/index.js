@@ -4,7 +4,7 @@ import {
 } from 'electron'
 
 // import '../renderer/store/index'
-const store = require('../renderer/store/index')
+const store = require('../renderer/store/store')
 
 /**
  * Set `__static` path to static files in production
