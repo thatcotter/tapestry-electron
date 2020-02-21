@@ -21,7 +21,7 @@
 
 <script>
     import Vue from 'vue'
-    import { mapGetters } from "vuex"
+    import { mapGetters, mapActions } from "vuex"
     const mapping = require('../../data/button-mapping.json')
     export default Vue.extend({
         name: 'InputsMonitor',
@@ -30,9 +30,15 @@
                 buttonMapping: mapping
             }
         },
+        methods: {
+            ...mapActions(['clearConnections'])
+        },
         computed: {
             ...mapGetters(['recentMessages', 'lastNMessages']),
         },
+        beforeMount(){
+            this.clearConnections()
+        }
     })
 </script>
 

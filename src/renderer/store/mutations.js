@@ -8,7 +8,7 @@ const clearPuzzles = (state) => {
     state.puzzles = []
 }
 
-const clearConnections = (state, payload) => {
+const clearConnections = (state) => {
     state.midiConnections = []
 }
 

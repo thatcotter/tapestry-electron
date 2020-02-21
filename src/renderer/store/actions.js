@@ -17,8 +17,8 @@ const addConnection = (store, payload) => {
     store.commit('addConnection', payload)
 }
 
-const clearConnections = (store, payload) => {
-    store.commit('clearConnections', payload)
+const clearConnections = (store) => {
+    store.commit('clearConnections')
 }
 
 const clearPuzzles = (store) => {
