@@ -1,0 +1,13 @@
+{
+    "puzzles": [
+        {
+            "id": 1,
+            "name": "Walk Start",
+            "dependencies": [],
+            "solution": {
+                "type": "press",
+                "buttons": [41]
+            }
+        }
+    ]
+}

@@ -37,10 +37,10 @@ virtualIn.on('noteon', msg => parseNote(msg));
 midiInputs.push(virtualIn);
 
 setInterval(() => {
-    console.log("midi connections: ", midiInputs.length)
-    console.log("new connections", easymidi.getInputs().filter(input => input != 'virtualOut').length)
+    // console.log("midi connections: ", midiInputs.length)
+    // console.log("new connections", easymidi.getInputs().filter(input => input != 'virtualOut').length)
     if (midiInputs.length != easymidi.getInputs().filter(input => input != 'virtualOut').length) {
-        console.log('resetting midi...')
+        // console.log('resetting midi...')
         store.dispatch('clearConnections')
     }
 }, 1500);

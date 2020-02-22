@@ -4,7 +4,9 @@
 
 import store from '../store/store'
 import * as _ from 'lodash'
-import {MODE} from '../store/mode'
+import {
+    MODE
+} from '../store/mode'
 
 // @ts-ignore
 const mapping = require('../data/button-mapping.json')
@@ -38,7 +40,7 @@ export const logicManager = store => {
             case 'resolvePuzzle':
                 onSolved(mutation.payload)
                 break;
-        
+
             default:
                 break;
         }
@@ -49,12 +51,35 @@ logicManager(store)
 
 const onMenuMessage = payload => {
     console.log("onMenuMessage!!")
-    store.dispatch('questMode')
+
+    switch (payload.note) {
+        case 0:
+            store.dispatch('questMode')
+            store.dispatch('setQuest', 'walk')
+            store.dispatch('loadQuest')
+            break;
+
+        case 1:
+            store.dispatch('questMode')
+            store.dispatch('setQuest', 'trolley')
+            store.dispatch('loadQuest')
+            break;
+
+        case 2:
+            store.dispatch('questMode')
+            store.dispatch('setQuest', 'car')
+            store.dispatch('loadQuest')
+            break;
+
+        default:
+            break;
+    }
+
 }
 
 const onQuestMessage = payload => {
     const actives = store.getters.activePuzzles
-    
+
     actives.forEach(puzzle => {
         const lock = [...puzzle.solution.buttons]
         const key = []
@@ -84,16 +109,16 @@ const onSolved = payload => {
                             })
                         }
                     }
-                }    
+                }
             }
-        }  
+        }
         numProcessed++
         if (numProcessed >= store.getters.inactivePuzzles.length) {
             setTimeout(() => {
                 onDepUnlock()
             }, 48);
         }
-    })    
+    })
 }
 
 const onDepUnlock = () => {
@@ -101,7 +126,9 @@ const onDepUnlock = () => {
         if (!val.solved) {
             if (!val.available) {
                 let check = true
-                console.log("dependencies is ", {...val.dependencies})
+                console.log("dependencies is ", {
+                    ...val.dependencies
+                })
                 for (const key in val.dependencies) {
                     if (val.dependencies.hasOwnProperty(key)) {
                         const element = val.dependencies[key];
@@ -121,8 +148,3 @@ const onDepUnlock = () => {
     })
     console.log(store.getters.inactivePuzzles[0])
 }
-
-
-
-
-

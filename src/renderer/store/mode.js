@@ -14,7 +14,3 @@ export const MODE = new Enum({
         description: "Quest Mode"
     }
 })
-
-// export default {
-//     MODE
-// }

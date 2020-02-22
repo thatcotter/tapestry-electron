@@ -58,6 +58,10 @@ const changeMode = (state, payload) => {
     state.mode = payload
 }
 
+const setQuest = (state, payload) => {
+    state.quest = payload
+}
+
 export default {
     clearMessages,
     clearPuzzles,
@@ -68,5 +72,6 @@ export default {
     unlockPuzzle,
     unlockDependency,
     resolvePuzzle,
-    changeMode
+    changeMode,
+    setQuest
 }

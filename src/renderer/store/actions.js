@@ -1,4 +1,5 @@
 import {MODE} from './mode'
+import Puzzle from '../puzzle/puzzle'
 
 const reset = (store) => {
     store.commit('clearMessages')
@@ -27,7 +28,47 @@ const clearPuzzles = (store) => {
 
 const resetPuzzles = (store) => {
     store.dispatch('clearPuzzles')
-    puzzleData = Object.assign({}, dataOrigin)
+
+    console.log('testing...');
+    
+    let puzzleData
+
+    if(store.quest === 'walk') {
+        const walkData = require('../data/walk-quest.json')
+        puzzleData = Object.assign({}, walkData)
+    } 
+    else if (store.quest === 'trolley') {
+        const trolleyData = require('../data/trolley-quest.json')
+        puzzleData = Object.assign({}, trolleyData)
+    }
+    else if (store.quest === 'car') {
+        const car = require('../data/car-quest.json')
+        puzzleData = Object.assign({}, car)
+    }
+
+    console.log(puzzleData)
+    puzzleData.puzzles.forEach(config => {
+        for (const key in config.dependencies) {
+            if (config.dependencies.hasOwnProperty(key)) {
+                if (config.dependencies[key]) {
+                    config.dependencies[key] = false
+                }
+            }
+        }
+        console.log(config)
+        const temp = new Puzzle(config)
+        store.commit('addPuzzle', temp)
+    });
+}
+
+const setQuest = (store, payload) => {
+    store.commit('setQuest', payload)
+}
+
+const loadQuest = (store) => {
+    store.dispatch('clearPuzzles')
+    const dataOrigin = require(`../data/${store.state.quest}-quest.json`)
+    let puzzleData = Object.assign({}, dataOrigin)
     console.log(puzzleData.puzzles)
     puzzleData.puzzles.forEach(config => {
         for (const key in config.dependencies) {
@@ -69,6 +110,8 @@ export default {
     clearConnections,
     clearPuzzles,
     resetPuzzles,
+    setQuest,
+    loadQuest,
     resolvePuzzle,
     unlockDependency,
     unlockPuzzle,

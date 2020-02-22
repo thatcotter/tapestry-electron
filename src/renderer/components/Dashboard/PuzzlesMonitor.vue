@@ -1,6 +1,9 @@
 <template>
     <div>
-        <!-- {{ puzzles }} -->
+        <br>
+        <div class="title">{{ quest }} Quest</div>
+        <!-- <br> -->
+
         <div class="title">Solved:</div>
         <!-- {{ solvedPuzzles }} -->
         <div class="in-card solved" 
@@ -44,7 +47,7 @@
     export default Vue.extend({
         name: 'PuzzlesMonitor',
         computed: {
-            ...mapState(['puzzles']),
+            ...mapState(['puzzles', 'quest']),
             ...mapGetters(['solvedPuzzles', 'activePuzzles', 'inactivePuzzles'])
         }
     })

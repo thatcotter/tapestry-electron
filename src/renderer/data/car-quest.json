@@ -1,0 +1,11 @@
+{
+    "puzzles": [{
+        "id": 1,
+        "name": "Car Start",
+        "dependencies": [],
+        "solution": {
+            "type": "press",
+            "buttons": [41]
+        }
+    }]
+}
