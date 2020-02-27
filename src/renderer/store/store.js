@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { createPersistedState, createSharedMutations } from 'vuex-electron'
-import modules from './modules'
 import actions from './actions';
 import getters from './getters';
 import mutations from './mutations';
@@ -20,7 +19,6 @@ export default new Vuex.Store({
   getters,
   mutations,
   actions,
-  modules,
   plugins: [
     createPersistedState(),
     createSharedMutations()

@@ -23,6 +23,14 @@ store.subscribe((mutation, state) => {
 export const midiInputs = [];
 // export const midiOutputs = []
 
+export const sendNote = note => {
+    virtualOut.send('noteon', {
+        note: note,
+        velocity: 127,
+        channel: 3
+    });
+}
+
 const parseNote = msg => {
     const newMsg = {
         ...msg,

@@ -4,9 +4,8 @@
 
 import store from '../store/store'
 import * as _ from 'lodash'
-import {
-    MODE
-} from '../store/mode'
+import {MODE} from '../store/mode'
+import {sendNote} from '../midiParsing'
 
 // @ts-ignore
 const mapping = require('../data/button-mapping.json')
@@ -22,8 +21,7 @@ export const logicManager = store => {
             case 'newMessage':
                 switch (state.mode) {
                     case MODE.Attract:
-                        console.log("onAttMessage!!")
-                        store.dispatch('menuMode')
+                        onAttractMessage(mutation.payload)
                         break;
                     case MODE.Menu:
                         onMenuMessage(mutation.payload)
@@ -49,8 +47,19 @@ export const logicManager = store => {
 
 logicManager(store)
 
+const onAttractMessage = payload => {
+    switch(payload.note) {
+        case 64:
+            store.dispatch('menuMode')
+            break;
+        default:
+            console.log(`relaying note ${payload.note}`)
+            sendNote(payload.note)
+            break;
+    }
+}
+
 const onMenuMessage = payload => {
-    console.log("onMenuMessage!!")
 
     switch (payload.note) {
         case 0:
