@@ -13,9 +13,10 @@ const mapping = require('../data/button-mapping.json')
 
 export const logicManager = store => {
     store.subscribe((mutation, state) => {
-        console.log(state.mode)
-        console.log(mutation.type)
-        console.log(mutation.payload)
+        console.log("New Vuex Mutation:")
+        console.log("Mode: ", state.mode)
+        console.log("Type: ", mutation.type)
+        console.table("Payload: ", mutation.payload)
 
         switch (mutation.type) {
             case 'newMessage':
@@ -49,7 +50,7 @@ logicManager(store)
 
 const onAttractMessage = payload => {
     switch(payload.note) {
-        case 64:
+        case 63:
             store.dispatch('menuMode')
             break;
         default:
@@ -91,15 +92,34 @@ const onQuestMessage = payload => {
 
     actives.forEach(puzzle => {
         const lock = [...puzzle.solution.buttons]
+        const questType = puzzle.solution.type
         const key = []
-        store.getters.lastNMessages(lock.length)
-            .reverse()
-            .forEach(val => {
-                key.push(mapping[val.note].id / 1)
-            })
-        if (_.isEqual(key, lock)) {
-            store.dispatch('resolvePuzzle', puzzle.id)
-        }
+
+        switch (questType) {
+            case 'press':
+                store.getters.lastNMessages(lock.length)
+                    .reverse()
+                    .forEach(val => {
+                        key.push(mapping[val.note].id / 1)
+                    })
+                if (_.isEqual(key, lock)) {
+                    store.dispatch('resolvePuzzle', puzzle.id)
+                }
+                break;
+            
+            case 'or':
+                const val = store.getters.lastNMessages(1)
+                key[0] = mapping[val[0].note].id / 1
+                console.log(key, lock)
+                lock.forEach(option => {
+                    if(key[0] === option)
+                        store.dispatch('resolvePuzzle', puzzle.id)
+                })
+                break;
+
+            default:
+                break;
+        }        
     });
 }
 
@@ -135,25 +155,18 @@ const onDepUnlock = () => {
         if (!val.solved) {
             if (!val.available) {
                 let check = true
-                console.log("dependencies is ", {
-                    ...val.dependencies
-                })
                 for (const key in val.dependencies) {
                     if (val.dependencies.hasOwnProperty(key)) {
                         const element = val.dependencies[key];
-                        console.log("element at ", key, " is ", element)
                         if (element === false) {
                             check = false
                         }
                     }
                 }
-                console.log(check)
                 if (check) {
                     store.dispatch('unlockPuzzle', val.id)
                 }
-                console.log(val)
             }
         }
     })
-    console.log(store.getters.inactivePuzzles[0])
 }
